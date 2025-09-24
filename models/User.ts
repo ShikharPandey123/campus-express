@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IUser extends Document {
   name: string;
   email: string;
-  password: string; // hashed
+  password: string;
   role: "Admin" | "Manager" | "WarehouseStaff";
   createdAt: Date;
 }
