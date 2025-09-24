@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Lock, Mail, User, UserCheck } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, User, UserCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,6 +20,7 @@ export default function SignupPage() {
     terms: false,
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   type Role = "Admin" | "Manager" | "WarehouseStaff";
 
   function updateField(field: string, value: string | boolean) {
@@ -63,8 +64,8 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
-      <div className="flex-1 flex flex-col justify-between p-8 lg:p-12">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
+      <div className="hidden lg:flex flex-1 flex-col justify-between p-8 lg:p-12">
         <div className="flex items-center">
           <Image src="/CE-3.jpg" alt="CX Logo" width={120} height={60} className="h-12 w-auto" priority />
         </div>
@@ -91,6 +92,16 @@ export default function SignupPage() {
       </div>
       <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
         <div className="w-full max-w-md space-y-6">
+          <div className="flex items-center justify-center lg:hidden mb-6">
+            <Image
+              src="/CE-3.jpg"
+              alt="CX Logo"
+              width={100}
+              height={50}
+              className="h-10 w-auto"
+              priority
+            />
+          </div>
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-blue-900">Create Account!</h1>
             <p className="text-gray-600">Sign up to start managing your logistics</p>
@@ -119,6 +130,24 @@ export default function SignupPage() {
               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
             <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                required
+                value={form.password}
+                onChange={(e) => updateField("password", e.target.value)}
+                className="pl-12 pr-12 h-12 bg-gray-50 border-gray-200 rounded-full text-gray-700"
+              />
+              <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+             <div className="relative">
               <Select
                 value={form.role}
                 onValueChange={(value: Role) => updateField("role", value)}
@@ -133,17 +162,6 @@ export default function SignupPage() {
                 </SelectContent>
               </Select>
               <UserCheck className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            </div>
-            <div className="relative">
-              <Input
-                type="password"
-                placeholder="Password"
-                required
-                value={form.password}
-                onChange={(e) => updateField("password", e.target.value)}
-                className="pl-12 h-12 bg-gray-50 border-gray-200 rounded-full text-gray-700"
-              />
-              <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
             <div className="flex items-start space-x-2">
               <Checkbox
@@ -176,6 +194,16 @@ export default function SignupPage() {
             <Link href="/login" className="text-teal-500 hover:text-teal-600 font-medium">
               Sign In
             </Link>
+          </div>
+          <div className="lg:hidden flex justify-center mt-8">
+            <Image
+              src="/CE-5.jpg"
+              alt="Logistics illustration"
+              width={300}
+              height={200}
+              className="rounded-lg"
+              priority
+            />
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Lock } from "lucide-react";
+import { Eye, EyeOff, Lock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -35,7 +36,6 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("token", data.token);
-
       router.push("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
@@ -46,8 +46,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
-      <div className="flex-1 flex flex-col justify-between p-8 lg:p-12">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
+      <div className="hidden lg:flex flex-1 flex-col justify-between p-8 lg:p-12">
         <div className="flex items-center">
           <Image
             src="/CE-3.jpg"
@@ -62,7 +62,7 @@ export default function LoginPage() {
           <div className="relative w-full max-w-md">
             <Image
               src="/CE-5.jpg"
-              alt="Logistics illustration with buildings, trucks and packages"
+              alt="Logistics illustration"
               width={400}
               height={300}
               className="w-full h-auto"
@@ -70,19 +70,19 @@ export default function LoginPage() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-            <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
-              <div className="w-3 h-3 bg-blue-600 rounded-sm"></div>
-            </div>
-          </div>
-          <span className="text-xl font-semibold text-gray-800">
-            Campus Express
-          </span>
-        </div>
       </div>
       <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
         <div className="w-full max-w-md space-y-6">
+          <div className="flex items-center justify-center lg:hidden mb-6">
+            <Image
+              src="/CE-3.jpg"
+              alt="CX Logo"
+              width={100}
+              height={50}
+              className="h-10 w-auto"
+              priority
+            />
+          </div>
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-blue-900">Welcome Back!</h1>
             <p className="text-gray-600">Sign in to manage your logistics</p>
@@ -99,9 +99,10 @@ export default function LoginPage() {
               />
               <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
+
             <div className="relative">
               <Input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
@@ -109,7 +110,19 @@ export default function LoginPage() {
                 className="pl-12 h-12 bg-gray-50 border-gray-200 rounded-full text-gray-700 placeholder:text-gray-400"
               />
               <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
             </div>
+
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Checkbox id="remember" className="rounded-sm" />
@@ -117,10 +130,14 @@ export default function LoginPage() {
                   Remember Me
                 </label>
               </div>
-              <Link href="#" className="text-sm text-gray-400 hover:text-gray-600">
+              <Link
+                href="#"
+                className="text-sm text-gray-400 hover:text-gray-600"
+              >
                 Forgot Password?
               </Link>
             </div>
+
             <Button
               type="submit"
               disabled={loading}
@@ -129,6 +146,7 @@ export default function LoginPage() {
               {loading ? "Logging in..." : "LOGIN"}
             </Button>
           </form>
+
           <div className="text-center">
             <span className="text-gray-600">Don&apos;t have an account? </span>
             <Link
@@ -137,6 +155,16 @@ export default function LoginPage() {
             >
               Sign Up
             </Link>
+          </div>
+          <div className="lg:hidden flex justify-center mt-8">
+            <Image
+              src="/CE-5.jpg"
+              alt="Logistics illustration"
+              width={300}
+              height={200}
+              className="rounded-lg"
+              priority
+            />
           </div>
         </div>
       </div>
