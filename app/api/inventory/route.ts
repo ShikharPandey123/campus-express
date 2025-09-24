@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import Shipment from "@/models/Shipments";
+import InventoryItem from "@/models/InventoryItem";
 import { verifyAuth, authorize } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
@@ -11,8 +11,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const shipments = await Shipment.find({});
-  return NextResponse.json(shipments);
+  const items = await InventoryItem.find({}).populate("warehouse");
+
+  const itemsWithAlert = items.map((item) => ({
+    ...item.toObject(),
+    lowStock: item.quantity < item.threshold,
+  }));
+
+  return NextResponse.json(itemsWithAlert);
 }
 
 export async function POST(req: NextRequest) {
@@ -25,9 +31,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const shipment = await Shipment.create(body);
-    return NextResponse.json(shipment, { status: 201 });
+    const item = await InventoryItem.create(body);
+    return NextResponse.json(item, { status: 201 });
   } catch{
-    return NextResponse.json({ error: "Failed to create shipment" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to add item" }, { status: 500 });
   }
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import Shipment from "@/models/Shipments";
+import InventoryItem from "@/models/InventoryItem";
 import { verifyAuth, authorize } from "@/lib/auth";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
@@ -11,10 +11,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const shipment = await Shipment.findById(params.id);
-  if (!shipment) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  const item = await InventoryItem.findById(params.id).populate("warehouse");
+  if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  return NextResponse.json(shipment);
+  return NextResponse.json({
+    ...item.toObject(),
+    lowStock: item.quantity < item.threshold,
+  });
 }
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
@@ -27,12 +30,15 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
   try {
     const body = await req.json();
-    const shipment = await Shipment.findByIdAndUpdate(params.id, body, { new: true });
-    if (!shipment) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    const item = await InventoryItem.findByIdAndUpdate(params.id, body, { new: true }).populate("warehouse");
+    if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    return NextResponse.json(shipment);
+    return NextResponse.json({
+      ...item.toObject(),
+      lowStock: item.quantity < item.threshold,
+    });
   } catch{
-    return NextResponse.json({ error: "Failed to update shipment" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update item" }, { status: 500 });
   }
 }
 
@@ -45,9 +51,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   }
 
   try {
-    await Shipment.findByIdAndDelete(params.id);
-    return NextResponse.json({ message: "Shipment deleted" });
+    await InventoryItem.findByIdAndDelete(params.id);
+    return NextResponse.json({ message: "Item deleted" });
   } catch{
-    return NextResponse.json({ error: "Failed to delete shipment" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to delete item" }, { status: 500 });
   }
 }
