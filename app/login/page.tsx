@@ -50,7 +50,7 @@ export default function LoginPage() {
       <div className="flex-1 flex flex-col justify-between p-8 lg:p-12">
         <div className="flex items-center">
           <Image
-            src="/cx-logo-new.jpeg"
+            src="/CE-3.jpg"
             alt="CX Logo"
             width={120}
             height={60}
@@ -61,7 +61,7 @@ export default function LoginPage() {
         <div className="flex-1 flex items-center justify-center">
           <div className="relative w-full max-w-md">
             <Image
-              src="/logistics-scene-new.jpeg"
+              src="/CE-5.jpg"
               alt="Logistics illustration with buildings, trucks and packages"
               width={400}
               height={300}

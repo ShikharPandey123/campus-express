@@ -28,14 +28,14 @@ export async function GET(req: Request) {
     let decoded: MyJwtPayload | string;
     try {
       decoded = jwt.verify(token, JWT_SECRET) as MyJwtPayload;
-    } catch (err) {
+    } catch{
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     if (typeof decoded === "string" || !decoded?.id) {
       return NextResponse.json({ error: "Invalid token payload" }, { status: 401 });
     }
-    
+
     const user = await User.findById(decoded.id).select("-password");
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
