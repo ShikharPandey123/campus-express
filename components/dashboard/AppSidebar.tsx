@@ -1,70 +1,86 @@
 "use client";
 
-import { Home, Package, Archive, Users, Building2 } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
+import { Home, Package, Archive, Users, FileText, Warehouse } from "lucide-react";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Shipments", url: "/shipments", icon: Package },
-  { title: "Inventory", url: "/inventory", icon: Archive },
-  { title: "Warehouses", url: "/warehouses", icon: Building2 },
-  { title: "Users", url: "/users", icon: Users },
+  { title: "Dashboard", url: "/dashboard", icon: Home, roles: ["Admin", "Manager", "WarehouseStaff"] },
+  { title: "Shipments", url: "/shipments", icon: Package, roles: ["Admin", "Manager", "WarehouseStaff"] },
+  { title: "Inventory", url: "/inventory", icon: Archive, roles: ["Admin", "Manager", "WarehouseStaff"] },
+  { title: "Warehouses", url: "/warehouses", icon: Warehouse, roles: ["Admin", "Manager", "WarehouseStaff"] },
+  { title: "Users", url: "/users", icon: Users, roles: ["Admin", "Manager"] },
+  { title: "Reports", url: "/reports", icon: FileText, roles: ["Admin", "Manager"] },
 ];
 
 export function AppSidebar() {
+  const [role, setRole] = useState<string | null>(null);
   const pathname = usePathname();
-  const { setOpenMobile } = useSidebar();
 
-  const isActive = (path: string) =>
-    path === "/dashboard" ? pathname === path : pathname.startsWith(path);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await fetch("/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const { user } = await res.json();
+          setRole(user.role);
+        }
+      } catch {
+        setRole(null);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const isActive = (path: string) => {
+    if (path === "/dashboard") {
+      return pathname === path;
+    }
+    return pathname.startsWith(path);
+  };
 
   const getNavCls = (active: boolean) =>
     active
-      ? "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
-      : "hover:bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]";
-
-  const handleLinkClick = () => {
-    setOpenMobile(false);
-  };
+      ? "bg-blue-900 text-white hover:bg-blue-800 shadow-md"
+      : "hover:bg-blue-50 text-gray-700 hover:text-blue-900 hover:shadow-sm";
 
   return (
-    <Sidebar 
-      className="border-r" 
-      collapsible="offcanvas"
-      variant="sidebar"
-      side="left"
-    >
-      <SidebarContent className="bg-[hsl(var(--sidebar-background))]">
-        <SidebarGroup className="pt-4">
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {menuItems.map((item) => (
+    <Sidebar className="md:bg-white bg-white shadow-lg md:shadow-none">
+      <SidebarContent className="bg-white border-r border-gray-200 md:bg-sidebar">
+        <div className="p-4 border-b border-gray-200 md:hidden">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-900 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">CE</span>
+            </div>
+            <h2 className="text-lg font-semibold text-blue-900">Campus Express</h2>
+          </div>
+        </div>
+        <SidebarGroup className="px-2 py-4">
+          <SidebarMenu className="space-y-2">
+            {menuItems
+              .filter((item) => role && item.roles.includes(role))
+              .map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild size="default">
-                    <Link
-                      href={item.url}
-                      className={`${getNavCls(isActive(item.url))} h-8 text-sm`}
-                      onClick={handleLinkClick}
+                  <SidebarMenuButton asChild>
+                    <Link 
+                      href={item.url} 
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium ${getNavCls(isActive(item.url))}`}
                     >
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      <item.icon className="h-5 w-5 flex-shrink-0" />
+                      <span className="text-sm">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

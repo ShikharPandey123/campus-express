@@ -7,7 +7,7 @@ import { RecentShipments } from "@/components/dashboard/RecentShipments";
 
 export default function DashboardPage() {
   return (
-    <DashboardLayout>
+    <DashboardLayout allowedRoles={["Admin", "Manager", "WarehouseStaff"]}>
       <div className="space-y-4 sm:space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <KPICard title="Out for Delivery" value="1,289" icon={Truck} iconColor="blue" />

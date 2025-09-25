@@ -81,17 +81,9 @@ export default function SignupPage() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-            <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
-              <div className="w-3 h-3 bg-blue-600 rounded-sm"></div>
-            </div>
-          </div>
-          <span className="text-xl font-semibold text-gray-800">Campus Express</span>
-        </div>
       </div>
-      <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
-        <div className="w-full max-w-md space-y-6">
+      <div className="flex-1 flex items-center justify-center p-8 lg:p-12 overflow-visible">
+        <div className="w-full max-w-md space-y-6 overflow-visible">
           <div className="flex items-center justify-center lg:hidden mb-6">
             <Image
               src="/CE-3.jpg"
@@ -106,7 +98,7 @@ export default function SignupPage() {
             <h1 className="text-3xl font-bold text-blue-900">Create Account!</h1>
             <p className="text-gray-600">Sign up to start managing your logistics</p>
           </div>
-          <form onSubmit={handleRegister} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4 overflow-visible">
             <div className="relative">
               <Input
                 type="text"
@@ -147,7 +139,7 @@ export default function SignupPage() {
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
-             <div className="relative">
+             <div className="relative overflow-visible">
               <Select
                 value={form.role}
                 onValueChange={(value: Role) => updateField("role", value)}
@@ -155,13 +147,19 @@ export default function SignupPage() {
                 <SelectTrigger className="pl-12 h-12 bg-gray-50 border-gray-200 rounded-full text-gray-700">
                   <SelectValue placeholder="Select Role" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent 
+                  position="popper"
+                  side="bottom"
+                  align="start"
+                  className="z-[100] bg-white border border-gray-200 shadow-lg rounded-lg min-w-[var(--radix-select-trigger-width)]"
+                  sideOffset={4}
+                >
                   <SelectItem value="WarehouseStaff">Warehouse Staff</SelectItem>
                   <SelectItem value="Manager">Manager</SelectItem>
                   <SelectItem value="Admin">Admin</SelectItem>
                 </SelectContent>
               </Select>
-              <UserCheck className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <UserCheck className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
             <div className="flex items-start space-x-2">
               <Checkbox
