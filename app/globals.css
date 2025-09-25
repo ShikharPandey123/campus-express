@@ -132,26 +132,34 @@ body {
   display: none !important;
 }
 
+/* Ensure sidebar trigger is always clickable */
+button[data-sidebar="trigger"] {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  z-index: 50 !important;
+}
+
 /* Mobile responsive styles */
 @media (max-width: 768px) {
-  /* Ensure sidebar is hidden on mobile by default */
+  /* Ensure sidebar trigger is clickable */
+  [data-sidebar="trigger"] {
+    z-index: 50;
+    pointer-events: auto;
+  }
+  
+  /* Ensure sidebar is properly positioned on mobile */
+  [data-sidebar="sidebar"][data-side="left"] {
+    left: 0;
+  }
+  
+  /* Ensure mobile sidebar is above overlay */
   [data-sidebar="sidebar"] {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
+    z-index: 50;
   }
   
-  /* Show sidebar when open on mobile */
-  [data-state="open"] [data-sidebar="sidebar"] {
-    transform: translateX(0);
-  }
-  
-  /* Overlay for mobile sidebar */
-  [data-sidebar="sidebar"][data-mobile="true"]::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+  /* Make sidebar content clickable */
+  [data-sidebar="sidebar"] * {
+    pointer-events: auto;
   }
 }
 

@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -23,6 +24,7 @@ const menuItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
 
   const isActive = (path: string) =>
     path === "/dashboard" ? pathname === path : pathname.startsWith(path);
@@ -32,13 +34,18 @@ export function AppSidebar() {
       ? "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
       : "hover:bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]";
 
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  };
+
   return (
     <Sidebar 
       className="border-r" 
       collapsible="offcanvas"
       variant="sidebar"
+      side="left"
     >
-      <SidebarContent className="bg-[hsl(var(--sidebar-background))] border-r border-[hsl(var(--sidebar-border))]">
+      <SidebarContent className="bg-[hsl(var(--sidebar-background))]">
         <SidebarGroup className="pt-4">
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
@@ -48,6 +55,7 @@ export function AppSidebar() {
                     <Link
                       href={item.url}
                       className={`${getNavCls(isActive(item.url))} h-8 text-sm`}
+                      onClick={handleLinkClick}
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>

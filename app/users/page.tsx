@@ -45,10 +45,10 @@ export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [fetchingUsers, setFetchingUsers] = useState(true); // Start with true to show loading
+  const [fetchingUsers, setFetchingUsers] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [tableKey, setTableKey] = useState(0); // Force table re-render
+  const [tableKey, setTableKey] = useState(0);
   const [deleteUserId, setDeleteUserId] = useState<number | string | null>(null);
 
   const form = useForm<UserFormData>({
@@ -56,7 +56,6 @@ export default function UsersPage() {
     defaultValues: { name: "", email: "", password: "", role: "WarehouseStaff" },
   });
 
-  // Fetch users on component mount
   useEffect(() => {
     const fetchUsers = async () => {
       setFetchingUsers(true);
@@ -78,8 +77,7 @@ export default function UsersPage() {
         if (res.ok) {
           const fetchedUsers = await res.json();
           console.log("Fetched users:", fetchedUsers);
-          
-          // Ensure all users have required properties and map MongoDB _id to id
+        
           const validUsers = fetchedUsers
             .filter((user: Partial<User & { _id?: string }>) => user && typeof user.name === 'string' && user.name.trim() !== '')
             .map((user: Partial<User & { _id?: string }>) => ({
@@ -124,16 +122,12 @@ export default function UsersPage() {
       }
 
       const response = await res.json();
-      console.log("API response:", response);
-      
-      // The API returns { message: "...", user: {...} }
+    //   console.log("API response:", response);
       const newUser = response.user || response;
-      console.log("New user data:", newUser);
-      
-      // Map MongoDB _id to id for consistency
+    //   console.log("New user data:", newUser);
       const mappedUser: User = {
         id: newUser._id || newUser.id || Date.now(),
-        name: newUser.name || data.name, // Use form data as fallback
+        name: newUser.name || data.name,
         email: newUser.email || data.email,
         role: newUser.role || data.role,
         status: newUser.status || 'active'
@@ -146,11 +140,11 @@ export default function UsersPage() {
         console.log("New users list:", newUsers);
         return newUsers;
       });
-      setTableKey(prev => prev + 1); // Force table re-render
+      setTableKey(prev => prev + 1);
       toast.success(`User ${mappedUser.name} created successfully.`);
       form.reset();
-      setShowPassword(false); // Reset password visibility
-      setDialogOpen(false); // Close the dialog
+      setShowPassword(false);
+      setDialogOpen(false);
     } catch (err: unknown) {
       const errorMessage = (err as Error).message;
       toast.error(`Error: ${errorMessage}`);
@@ -186,7 +180,6 @@ export default function UsersPage() {
   };
 
   const filteredUsers = users.filter((user) => {
-    // Handle cases where user or user.name might be undefined/null
     if (!user || !user.name) {
       return false;
     }
@@ -205,8 +198,8 @@ export default function UsersPage() {
           <Dialog open={dialogOpen} onOpenChange={(open) => {
             setDialogOpen(open);
             if (!open) {
-              form.reset(); // Reset form when dialog closes
-              setShowPassword(false); // Reset password visibility
+              form.reset();
+              setShowPassword(false);
             }
           }}>
             <DialogTrigger asChild>
