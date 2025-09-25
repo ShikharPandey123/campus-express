@@ -31,9 +31,21 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+    console.log("Received inventory item data:", body);
+    
+    // Validate that warehouse exists before creating the item
+    if (!body.warehouse) {
+      return NextResponse.json({ error: "Warehouse is required" }, { status: 400 });
+    }
+    
     const item = await InventoryItem.create(body);
-    return NextResponse.json(item, { status: 201 });
-  } catch{
-    return NextResponse.json({ error: "Failed to add item" }, { status: 500 });
+    console.log("Created inventory item:", item);
+    
+    const populatedItem = await InventoryItem.findById(item._id).populate("warehouse");
+    return NextResponse.json(populatedItem, { status: 201 });
+  } catch (error: unknown) {
+    console.error("Error creating inventory item:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to add item";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -11,7 +11,30 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const warehouses = await Warehouse.find({});
+  let warehouses = await Warehouse.find({});
+  
+  // If no warehouses exist, create some sample data
+  if (warehouses.length === 0) {
+    console.log("No warehouses found, creating sample warehouses...");
+    const sampleWarehouses = [
+      {
+        name: "Main Warehouse",
+        location: "Downtown",
+        capacity: 10000,
+        currentCapacity: 0
+      },
+      {
+        name: "Secondary Warehouse", 
+        location: "Industrial District",
+        capacity: 5000,
+        currentCapacity: 0
+      }
+    ];
+    
+    warehouses = await Warehouse.insertMany(sampleWarehouses);
+    console.log("Created sample warehouses:", warehouses);
+  }
+  
   return NextResponse.json(
     warehouses.map((wh) => ({
       ...wh.toObject(),
