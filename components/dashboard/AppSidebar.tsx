@@ -35,7 +35,7 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar className="hidden lg:block w-64" collapsible="none">
-        <SidebarContent className="bg-[hsl(var(--sidebar-background))] border-r border-[hsl(var(--sidebar-border))]">
+        <SidebarContent className="bg-[hsl(var(--sidebar-background))] border-[hsl(var(--sidebar-border))]">
           <SidebarGroup className="pt-4">
             <SidebarGroupContent>
               <SidebarMenu className="space-y-1">

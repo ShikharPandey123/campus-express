@@ -12,12 +12,12 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-dashboard-bg">
+      <div className="flex min-h-screen w-full bg-dashboard-bg">
         {/* Sidebar */}
         <AppSidebar />
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
+        {/* Main Content */}
+        <div className="flex flex-1 flex-col">
           {/* Header */}
           <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
             <div className="flex items-center gap-4">
@@ -39,14 +39,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             </div>
 
-            {/* Right side actions */}
-            <Button variant="default" size="sm">
+            {/* Right Side */}
+            <Button variant="ghost" size="sm">
               Login
             </Button>
           </header>
 
           {/* Page Content */}
-          <main className="flex-1 p-6">{children}</main>
+          {/* ✅ Removed ALL left padding to sit flush with sidebar */}
+          <main className="flex-1 py-6 pr-6">{children}</main>
         </div>
       </div>
     </SidebarProvider>
