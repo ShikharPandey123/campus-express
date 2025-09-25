@@ -115,3 +115,53 @@ body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }
+
+/* Fix sidebar gap issue */
+[data-slot="sidebar-gap"] {
+  display: none !important;
+}
+
+/* Ensure sidebar container doesn't create extra spacing */
+[data-slot="sidebar-container"] {
+  position: relative !important;
+}
+
+/* Alternative approach - hide the gap completely */
+.group.peer.text-sidebar-foreground [data-slot="sidebar-gap"] {
+  width: 0 !important;
+  display: none !important;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  /* Ensure sidebar is hidden on mobile by default */
+  [data-sidebar="sidebar"] {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Show sidebar when open on mobile */
+  [data-state="open"] [data-sidebar="sidebar"] {
+    transform: translateX(0);
+  }
+  
+  /* Overlay for mobile sidebar */
+  [data-sidebar="sidebar"][data-mobile="true"]::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+}
+
+/* Extra small screens utility classes */
+@media (min-width: 475px) {
+  .xs\:block {
+    display: block !important;
+  }
+  
+  .xs\:hidden {
+    display: none !important;
+  }
+}

@@ -148,12 +148,15 @@ export default function InventoryPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Inventory</h1>
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Inventory</h1>
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-blue-900 hover:bg-blue-800 text-white">Add Item</Button>
+              <Button className="bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto">
+                <span className="sm:hidden">Add New Item</span>
+                <span className="hidden sm:inline">Add Item</span>
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] bg-white border border-gray-200 shadow-xl z-50">
               <DialogHeader className="border-b border-gray-200 pb-4">
@@ -250,56 +253,58 @@ export default function InventoryPage() {
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-gray-200 bg-gray-50">
-                <TableHead className="font-semibold text-gray-900">Name</TableHead>
-                <TableHead className="font-semibold text-gray-900">Quantity</TableHead>
-                <TableHead className="font-semibold text-gray-900">Threshold</TableHead>
-                <TableHead className="font-semibold text-gray-900">Warehouse</TableHead>
-                <TableHead className="font-semibold text-gray-900">Status</TableHead>
-                <TableHead className="font-semibold text-gray-900">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {items.map((item) => (
-                <TableRow key={item._id} className="border-gray-200 hover:bg-gray-50 transition-colors">
-                  <TableCell className="font-medium text-gray-900">{item.name}</TableCell>
-                  <TableCell className="text-gray-700">{item.quantity}</TableCell>
-                  <TableCell className="text-gray-700">{item.threshold}</TableCell>
-                  <TableCell className="text-gray-700">{item.warehouse?.name || "N/A"}</TableCell>
-                  <TableCell>
-                    {item.lowStock ? (
-                      <Badge variant="destructive" className="bg-red-100 text-red-800 hover:bg-red-100">
-                        Low Stock
-                      </Badge>
-                    ) : (
-                      <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-100">
-                        In Stock
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                      onClick={() => deleteItem(item._id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-gray-200 bg-gray-50">
+                  <TableHead className="font-semibold text-gray-900 min-w-[120px]">Name</TableHead>
+                  <TableHead className="font-semibold text-gray-900 min-w-[80px]">Quantity</TableHead>
+                  <TableHead className="font-semibold text-gray-900 min-w-[80px] hidden sm:table-cell">Threshold</TableHead>
+                  <TableHead className="font-semibold text-gray-900 min-w-[100px] hidden md:table-cell">Warehouse</TableHead>
+                  <TableHead className="font-semibold text-gray-900 min-w-[100px]">Status</TableHead>
+                  <TableHead className="font-semibold text-gray-900 min-w-[80px]">Actions</TableHead>
                 </TableRow>
-              ))}
-              {items.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                    No inventory items found. Add your first item to get started.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {items.map((item) => (
+                  <TableRow key={item._id} className="border-gray-200 hover:bg-gray-50 transition-colors">
+                    <TableCell className="font-medium text-gray-900">{item.name}</TableCell>
+                    <TableCell className="text-gray-700">{item.quantity}</TableCell>
+                    <TableCell className="text-gray-700 hidden sm:table-cell">{item.threshold}</TableCell>
+                    <TableCell className="text-gray-700 hidden md:table-cell">{item.warehouse?.name || "N/A"}</TableCell>
+                    <TableCell>
+                      {item.lowStock ? (
+                        <Badge variant="destructive" className="bg-red-100 text-red-800 hover:bg-red-100">
+                          Low Stock
+                        </Badge>
+                      ) : (
+                        <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-100">
+                          In Stock
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                        onClick={() => deleteItem(item._id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {items.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                      No inventory items found. Add your first item to get started.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
     </DashboardLayout>

@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
 
   let warehouses = await Warehouse.find({});
   
-  // If no warehouses exist, create some sample data
   if (warehouses.length === 0) {
     console.log("No warehouses found, creating sample warehouses...");
     const sampleWarehouses = [
