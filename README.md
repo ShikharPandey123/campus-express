@@ -2,8 +2,6 @@
 
 A comprehensive, full-stack shipment management system built with Next.js, Node.js, and MongoDB. Features real-time tracking, role-based access control, and an intuitive dashboard for managing shipments across multiple warehouses.
 
-![Campus Express Logo](public/CE-5.jpg)
-
 ## 🌟 Features
 
 ### 🔐 **Authentication & Authorization**
