@@ -14,7 +14,6 @@ export async function GET(req: NextRequest) {
 
     const shipments = await Shipment.find({});
     
-    // If no shipments exist, return sample data for demonstration
     if (shipments.length === 0) {
       const sampleShipments = [
         {
@@ -55,7 +54,7 @@ export async function GET(req: NextRequest) {
           destination: "Denver, CO",
           status: "Delivered",
           createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-          updatedAt: new Date().toISOString() // Delivered today
+          updatedAt: new Date().toISOString()
         },
         {
           _id: "sample005",
@@ -127,8 +126,6 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-
-    // Map frontend data to model schema
     const shipmentData: Record<string, string> = {
       sender: body.senderName || body.sender || '',
       receiver: body.recipientName || body.receiver || '',
@@ -136,8 +133,6 @@ export async function POST(req: NextRequest) {
       destination: body.recipientAddress || body.destination || '',
       status: mapStatusToModel(body.status) || "Pending"
     };
-
-    // Validate required fields
     const requiredFields = ['sender', 'receiver', 'origin', 'destination'];
     const missingFields = requiredFields.filter(field => !shipmentData[field]);
     
@@ -153,15 +148,12 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     if (error instanceof Error) {
-      // Check for Mongoose validation errors
       if (error.name === 'ValidationError') {
         return NextResponse.json({ 
           error: "Validation failed", 
           message: error.message
         }, { status: 400 });
       }
-      
-      // Check for Mongoose cast errors
       if (error.name === 'CastError') {
         return NextResponse.json({ 
           error: "Invalid data format", 
@@ -181,7 +173,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Helper function to map frontend status to model status
 function mapStatusToModel(frontendStatus: string): string {
   const statusMap: Record<string, string> = {
     'pending': 'Pending',

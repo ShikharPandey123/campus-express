@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import InventoryItem from "@/models/InventoryItem";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Warehouse from "@/models/Warehouse"; // Import Warehouse model for populate to work
+import InventoryItem from "@shared/models/InventoryItem";
 import { verifyAuth, authorize } from "@/lib/auth";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

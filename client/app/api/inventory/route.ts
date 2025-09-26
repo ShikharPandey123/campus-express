@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import InventoryItem from "@/models/InventoryItem";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Warehouse from "@/models/Warehouse"; // Import Warehouse model for populate to work
 import { verifyAuth, authorize } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
@@ -34,8 +32,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     console.log("Received inventory item data:", body);
-    
-    // Validate that warehouse exists before creating the item
     if (!body.warehouse) {
       return NextResponse.json({ error: "Warehouse is required" }, { status: 400 });
     }
