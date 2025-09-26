@@ -88,39 +88,40 @@ export function RecentShipments({ shipments }: RecentShipmentsProps) {
           <Table>
             <TableHeader>
               <TableRow className="border-[hsl(var(--border))]">
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Tracking ID</TableHead>
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Description</TableHead>
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Sender</TableHead>
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Recipient</TableHead>
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Current Location</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium min-w-[120px]">Tracking ID</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium hidden sm:table-cell min-w-[150px]">Description</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium hidden md:table-cell">Sender</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium hidden lg:table-cell">Recipient</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium hidden xl:table-cell">Current Location</TableHead>
                 <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Status</TableHead>
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Created</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium hidden sm:table-cell">Created</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {recentShipments.map((shipment) => (
                 <TableRow key={shipment._id} className="border-[hsl(var(--border))] hover:bg-[hsl(var(--muted))]/30">
-                  <TableCell className="font-medium text-[hsl(var(--foreground))]">
-                    {shipment.trackingId}
+                  <TableCell className="font-medium text-[hsl(var(--foreground))] min-w-[120px]">
+                    <div className="truncate">{shipment.trackingId}</div>
                   </TableCell>
-                  <TableCell className="text-[hsl(var(--muted-foreground))] max-w-[150px] truncate">
+                  <TableCell className="text-[hsl(var(--muted-foreground))] max-w-[150px] truncate hidden sm:table-cell">
                     {shipment.description}
                   </TableCell>
-                  <TableCell className="text-[hsl(var(--muted-foreground))]">
-                    {shipment.senderName}
+                  <TableCell className="text-[hsl(var(--muted-foreground))] hidden md:table-cell">
+                    <div className="truncate max-w-[120px]">{shipment.senderName}</div>
                   </TableCell>
-                  <TableCell className="text-[hsl(var(--muted-foreground))]">
-                    {shipment.recipientName}
+                  <TableCell className="text-[hsl(var(--muted-foreground))] hidden lg:table-cell">
+                    <div className="truncate max-w-[120px]">{shipment.recipientName}</div>
                   </TableCell>
-                  <TableCell className="text-[hsl(var(--muted-foreground))]">
-                    {shipment.currentLocation}
+                  <TableCell className="text-[hsl(var(--muted-foreground))] hidden xl:table-cell">
+                    <div className="truncate max-w-[150px]">{shipment.currentLocation}</div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className={`bg-${getStatusColor(shipment.status)}/10 text-${getStatusColor(shipment.status)} hover:bg-${getStatusColor(shipment.status)}/20`}>
-                      {shipment.status}
+                    <Badge variant="secondary" className={`bg-${getStatusColor(shipment.status)}/10 text-${getStatusColor(shipment.status)} hover:bg-${getStatusColor(shipment.status)}/20 text-xs`}>
+                      <span className="hidden sm:inline">{shipment.status}</span>
+                      <span className="sm:hidden">{shipment.status.split('-')[0]}</span>
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-[hsl(var(--muted-foreground))]">
+                  <TableCell className="text-[hsl(var(--muted-foreground))] hidden sm:table-cell text-sm">
                     {new Date(shipment.createdAt).toLocaleDateString()}
                   </TableCell>
                 </TableRow>

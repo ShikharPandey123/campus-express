@@ -42,7 +42,16 @@ export function LocationChart({ shipments }: LocationChartProps) {
   const chartData = useMemo(() => {
     const locationCounts = shipments.reduce((acc, shipment) => {
       // Use current location or recipient address as the location
-      const location = shipment.currentLocation || shipment.recipientAddress || 'Unknown Location';
+      let location = shipment.currentLocation || shipment.recipientAddress || 'Unknown Location';
+      
+      // Clean up location names for better display
+      location = location
+        .replace(' Processing Center', '')
+        .replace(' Distribution Center', '')
+        .replace(' Sorting Facility', '')
+        .replace(' Warehouse', '')
+        .replace(' Hub', '');
+      
       acc[location] = (acc[location] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -82,16 +91,16 @@ export function LocationChart({ shipments }: LocationChartProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-64">
+        <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={chartData}
-                cx="50%"
+                cx="40%"
                 cy="50%"
-                innerRadius={40}
-                outerRadius={80}
-                paddingAngle={5}
+                innerRadius={35}
+                outerRadius={70}
+                paddingAngle={3}
                 dataKey="value"
               >
                 {chartData.map((entry, index) => (
@@ -99,10 +108,20 @@ export function LocationChart({ shipments }: LocationChartProps) {
                 ))}
               </Pie>
               <Legend
-                verticalAlign="bottom"
-                height={36}
+                verticalAlign="middle"
+                align="right"
+                layout="vertical"
+                iconSize={10}
+                wrapperStyle={{
+                  paddingLeft: "20px",
+                  fontSize: "12px",
+                  lineHeight: "20px"
+                }}
                 formatter={(value, entry) => (
-                  <span className="text-sm text-[hsl(var(--muted-foreground))]">
+                  <span 
+                    className="text-xs text-[hsl(var(--muted-foreground))] inline-block" 
+                    title={value}
+                  >
                     {value} ({entry.payload?.value})
                   </span>
                 )}

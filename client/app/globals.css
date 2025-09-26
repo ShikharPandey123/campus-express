@@ -48,6 +48,10 @@
   --sidebar-bg: 0 0% 100%;
   --kpi-bg: 0 0% 100%;
 
+  /* Mobile optimizations */
+  --mobile-padding: 0.75rem;
+  --desktop-padding: 1.5rem;
+
   /* Chart Colors */
   --chart-blue: 217 91% 60%;
   --chart-orange: 25 95% 60%;
