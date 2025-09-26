@@ -13,11 +13,22 @@ import { Badge } from "@/components/ui/badge";
 
 interface Shipment {
   _id: string;
-  sender: string;
-  receiver: string;
-  origin: string;
-  destination: string;
-  status: "Pending" | "PickedUp" | "InTransit" | "OutForDelivery" | "Delivered" | "Delayed";
+  trackingId: string;
+  description: string;
+  currentLocation: string;
+  weight: string;
+  dimensions: string;
+  status: "pending" | "in-transit" | "out-for-delivery" | "delivered";
+  warehouse: string;
+  senderName: string;
+  senderContact: string;
+  senderAddress: string;
+  recipientName: string;
+  recipientContact: string;
+  recipientAddress: string;
+  pickupDate: string;
+  expectedDate: string;
+  isDelivered: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -26,19 +37,16 @@ interface RecentShipmentsProps {
   shipments: Shipment[];
 }
 
-const getStatusColor = (status: "Pending" | "PickedUp" | "InTransit" | "OutForDelivery" | "Delivered" | "Delayed") => {
+const getStatusColor = (status: "pending" | "in-transit" | "out-for-delivery" | "delivered") => {
   switch (status) {
-    case 'Pending':
+    case 'pending':
       return 'orange';
-    case 'PickedUp':
-    case 'InTransit':
+    case 'in-transit':
       return 'blue';
-    case 'OutForDelivery':
+    case 'out-for-delivery':
       return 'purple';
-    case 'Delivered':
+    case 'delivered':
       return 'green';
-    case 'Delayed':
-      return 'red';
     default:
       return 'gray';
   }
@@ -80,11 +88,11 @@ export function RecentShipments({ shipments }: RecentShipmentsProps) {
           <Table>
             <TableHeader>
               <TableRow className="border-[hsl(var(--border))]">
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">ID</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Tracking ID</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Description</TableHead>
                 <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Sender</TableHead>
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Receiver</TableHead>
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Origin</TableHead>
-                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Destination</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Recipient</TableHead>
+                <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Current Location</TableHead>
                 <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Status</TableHead>
                 <TableHead className="text-[hsl(var(--muted-foreground))] font-medium">Created</TableHead>
               </TableRow>
@@ -93,19 +101,19 @@ export function RecentShipments({ shipments }: RecentShipmentsProps) {
               {recentShipments.map((shipment) => (
                 <TableRow key={shipment._id} className="border-[hsl(var(--border))] hover:bg-[hsl(var(--muted))]/30">
                   <TableCell className="font-medium text-[hsl(var(--foreground))]">
-                    {shipment._id.substring(0, 8)}...
+                    {shipment.trackingId}
+                  </TableCell>
+                  <TableCell className="text-[hsl(var(--muted-foreground))] max-w-[150px] truncate">
+                    {shipment.description}
                   </TableCell>
                   <TableCell className="text-[hsl(var(--muted-foreground))]">
-                    {shipment.sender}
+                    {shipment.senderName}
                   </TableCell>
                   <TableCell className="text-[hsl(var(--muted-foreground))]">
-                    {shipment.receiver}
+                    {shipment.recipientName}
                   </TableCell>
                   <TableCell className="text-[hsl(var(--muted-foreground))]">
-                    {shipment.origin}
-                  </TableCell>
-                  <TableCell className="text-[hsl(var(--muted-foreground))]">
-                    {shipment.destination}
+                    {shipment.currentLocation}
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className={`bg-${getStatusColor(shipment.status)}/10 text-${getStatusColor(shipment.status)} hover:bg-${getStatusColor(shipment.status)}/20`}>

@@ -16,9 +16,19 @@ interface Shipment {
   currentLocation: {
     latitude: number;
     longitude: number;
-  };
+  } | string;
   status: string;
 }
+
+// Sample location mapping - you can expand this
+const locationCoordinates: { [key: string]: [number, number] } = {
+  "Downtown": [28.6139, 77.209],
+  "Industrial District": [28.5355, 77.391],
+  "Main Warehouse": [28.7041, 77.1025],
+  "Secondary Warehouse": [28.4595, 77.0266],
+  "in-transit": [28.6139, 77.209], // Default location for in-transit
+  "delivery-center": [28.6129, 77.2295],
+};
 
 export default function ShipmentMap() {
   const [shipments, setShipments] = useState<Shipment[]>([]);
@@ -54,19 +64,41 @@ export default function ShipmentMap() {
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {shipments.map((shipment) => (
+      {shipments
+        .map((shipment) => {
+          // Get coordinates based on currentLocation type
+          let coordinates: [number, number] | null = null;
+          
+          if (typeof shipment.currentLocation === 'object' && 
+              shipment.currentLocation.latitude && 
+              shipment.currentLocation.longitude) {
+            // If currentLocation is an object with coordinates
+            coordinates = [
+              shipment.currentLocation.latitude,
+              shipment.currentLocation.longitude
+            ];
+          } else if (typeof shipment.currentLocation === 'string') {
+            // If currentLocation is a string, map it to coordinates
+            coordinates = locationCoordinates[shipment.currentLocation] || null;
+          }
+          
+          return coordinates ? { ...shipment, coordinates } : null;
+        })
+        .filter((item): item is Shipment & { coordinates: [number, number] } => item !== null)
+        .map((shipment) => (
         <Marker
           key={shipment._id}
-          position={[
-            shipment.currentLocation.latitude,
-            shipment.currentLocation.longitude,
-          ]}
+          position={shipment.coordinates}
           icon={shipmentIcon}
         >
           <Popup>
             <strong>{shipment.trackingId}</strong>
             <br />
             Status: {shipment.status}
+            <br />
+            Location: {typeof shipment.currentLocation === 'string' 
+              ? shipment.currentLocation 
+              : `${shipment.currentLocation.latitude}, ${shipment.currentLocation.longitude}`}
           </Popup>
         </Marker>
       ))}

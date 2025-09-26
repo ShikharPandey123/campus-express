@@ -5,11 +5,22 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell }
 
 interface Shipment {
   _id: string;
-  sender: string;
-  receiver: string;
-  origin: string;
-  destination: string;
-  status: "Pending" | "PickedUp" | "InTransit" | "OutForDelivery" | "Delivered" | "Delayed";
+  trackingId: string;
+  description: string;
+  currentLocation: string;
+  weight: string;
+  dimensions: string;
+  status: "pending" | "in-transit" | "out-for-delivery" | "delivered";
+  warehouse: string;
+  senderName: string;
+  senderContact: string;
+  senderAddress: string;
+  recipientName: string;
+  recipientContact: string;
+  recipientAddress: string;
+  pickupDate: string;
+  expectedDate: string;
+  isDelivered: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -20,29 +31,26 @@ interface ShipmentChartProps {
 
 const colors = {
   pending: "hsl(var(--chart-orange))",
-  pickedup: "hsl(var(--chart-blue))",
-  intransit: "hsl(var(--chart-blue))",
-  outfordelivery: "hsl(var(--chart-green))",
+  "in-transit": "hsl(var(--chart-blue))",
+  "out-for-delivery": "hsl(var(--chart-purple))",
   delivered: "hsl(var(--chart-green))",
-  delayed: "hsl(var(--chart-red))",
 };
 
 export function ShipmentChart({ shipments }: ShipmentChartProps) {
   const chartData = useMemo(() => {
     const statusCounts = shipments.reduce((acc, shipment) => {
-      const status = shipment.status.toLowerCase();
+      const status = shipment.status;
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
     return Object.entries(statusCounts)
       .map(([status, count]) => ({
-        name: status === 'pickedup' ? 'Picked Up' : 
-              status === 'intransit' ? 'In Transit' : 
-              status === 'outfordelivery' ? 'Out for Delivery' : 
+        name: status === 'in-transit' ? 'In Transit' : 
+              status === 'out-for-delivery' ? 'Out for Delivery' : 
               status.charAt(0).toUpperCase() + status.slice(1),
         value: count,
-        category: status.replace(/\s+/g, '').toLowerCase(),
+        category: status,
       }))
       .sort((a, b) => b.value - a.value);
   }, [shipments]);

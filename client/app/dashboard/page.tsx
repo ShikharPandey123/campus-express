@@ -10,11 +10,22 @@ import { RecentShipments } from "@/components/dashboard/RecentShipments";
 
 interface Shipment {
   _id: string;
-  sender: string;
-  receiver: string;
-  origin: string;
-  destination: string;
-  status: "Pending" | "PickedUp" | "InTransit" | "OutForDelivery" | "Delivered" | "Delayed";
+  trackingId: string;
+  description: string;
+  currentLocation: string;
+  weight: string;
+  dimensions: string;
+  status: "pending" | "in-transit" | "out-for-delivery" | "delivered";
+  warehouse: string;
+  senderName: string;
+  senderContact: string;
+  senderAddress: string;
+  recipientName: string;
+  recipientContact: string;
+  recipientAddress: string;
+  pickupDate: string;
+  expectedDate: string;
+  isDelivered: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -83,17 +94,16 @@ export default function DashboardPage() {
     const metrics = shipmentsData.reduce(
       (acc, shipment) => {
         switch (shipment.status) {
-          case 'OutForDelivery':
+          case 'out-for-delivery':
             acc.outForDelivery += 1;
             break;
-          case 'Pending':
-          case 'PickedUp':
+          case 'pending':
             acc.pendingPickup += 1;
             break;
-          case 'InTransit':
+          case 'in-transit':
             acc.inTransit += 1;
             break;
-          case 'Delivered':
+          case 'delivered':
             // Check if delivered today
             if (new Date(shipment.updatedAt).toDateString() === today) {
               acc.deliveredToday += 1;

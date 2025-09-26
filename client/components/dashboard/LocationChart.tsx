@@ -5,11 +5,22 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
 interface Shipment {
   _id: string;
-  sender: string;
-  receiver: string;
-  origin: string;
-  destination: string;
-  status: "Pending" | "PickedUp" | "InTransit" | "OutForDelivery" | "Delivered" | "Delayed";
+  trackingId: string;
+  description: string;
+  currentLocation: string;
+  weight: string;
+  dimensions: string;
+  status: "pending" | "in-transit" | "out-for-delivery" | "delivered";
+  warehouse: string;
+  senderName: string;
+  senderContact: string;
+  senderAddress: string;
+  recipientName: string;
+  recipientContact: string;
+  recipientAddress: string;
+  pickupDate: string;
+  expectedDate: string;
+  isDelivered: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -30,8 +41,8 @@ const chartColors = [
 export function LocationChart({ shipments }: LocationChartProps) {
   const chartData = useMemo(() => {
     const locationCounts = shipments.reduce((acc, shipment) => {
-      // Use destination as the location
-      const location = shipment.destination || 'Unknown Location';
+      // Use current location or recipient address as the location
+      const location = shipment.currentLocation || shipment.recipientAddress || 'Unknown Location';
       acc[location] = (acc[location] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
