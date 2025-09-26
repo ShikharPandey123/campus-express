@@ -1,8 +1,8 @@
-import express from "express";
-import http from "http";
+const express = require("express");
+const http = require("http");
 import { Server } from "socket.io";
-import cors from "cors";
-import dotenv from "dotenv";
+const cors = require("cors");
+const dotenv = require("dotenv");
 import connectDB from "./utils/db";
 import shipmentRoutes from "./routes/shipments";
 import { registerShipmentSocket } from "./socket";

@@ -1,10 +1,9 @@
 import { Router } from "express";
-import Shipment from "../../models/Shipment"; // assuming models live outside server
+import Shipment from "@shared/models/Shipment";
 import mongoose from "mongoose";
 
 const router = Router();
 
-// Get all shipments
 router.get("/", async (req, res) => {
   try {
     const shipments = await Shipment.find({});
@@ -14,7 +13,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Create shipment
 router.post("/", async (req, res) => {
   try {
     const shipment = await Shipment.create(req.body);
@@ -24,7 +22,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Update shipment location (optional via API)
 router.put("/:id/location", async (req, res) => {
   try {
     const { latitude, longitude } = req.body;
