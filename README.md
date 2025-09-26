@@ -92,7 +92,7 @@ A comprehensive, full-stack shipment management system built with Next.js, Node.
 
    **Server Environment** (`server/.env`):
    ```env
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/campus-express
+   MONGODB_URI=<>
    PORT=5000
    JWT_SECRET=your-super-secure-jwt-secret-key-here
    NODE_ENV=development
