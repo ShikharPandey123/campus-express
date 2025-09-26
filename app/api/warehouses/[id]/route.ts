@@ -3,7 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import Warehouse from "@/models/Warehouse";
 import { verifyAuth, authorize } from "@/lib/auth";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
   const user = await verifyAuth(req);
 
@@ -11,7 +11,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const warehouse = await Warehouse.findById(params.id);
+  const { id } = await params;
+  const warehouse = await Warehouse.findById(id);
   if (!warehouse) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   return NextResponse.json({
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   });
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
   const user = await verifyAuth(req);
 
@@ -30,7 +31,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
   try {
     const body = await req.json();
-    const warehouse = await Warehouse.findByIdAndUpdate(params.id, body, { new: true });
+    const { id } = await params;
+    const warehouse = await Warehouse.findByIdAndUpdate(id, body, { new: true });
     if (!warehouse) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
     return NextResponse.json({
@@ -42,7 +44,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
   const user = await verifyAuth(req);
 
@@ -51,7 +53,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   }
 
   try {
-    await Warehouse.findByIdAndDelete(params.id);
+    const { id } = await params;
+    await Warehouse.findByIdAndDelete(id);
     return NextResponse.json({ message: "Warehouse deleted" });
   } catch{
     return NextResponse.json({ error: "Failed to delete warehouse" }, { status: 500 });

@@ -42,6 +42,7 @@ export function DashboardLayout({ children, allowedRoles }: DashboardLayoutProps
                 )}
               </div>
               <Button
+                className="bg-blue-900 hover:bg-blue-800 text-white shadow-sm"
                 variant="outline"
                 size="sm"
                 onClick={() => {

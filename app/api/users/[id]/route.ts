@@ -12,7 +12,7 @@ interface MyJwtPayload extends JwtPayload {
   role?: string;
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
 
   const authHeader = req.headers.get("authorization");
@@ -32,7 +32,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const deletedUser = await User.findByIdAndDelete(params.id);
+  const { id } = await params;
+  const deletedUser = await User.findByIdAndDelete(id);
   if (!deletedUser) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
