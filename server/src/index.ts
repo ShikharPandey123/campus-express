@@ -3,7 +3,7 @@ const http = require("http");
 import { Server } from "socket.io";
 const cors = require("cors");
 const dotenv = require("dotenv");
-import connectDB from "./utils/db";
+import {connectDB} from "./utils/db";
 import shipmentRoutes from "./routes/shipments";
 import { registerShipmentSocket } from "./socket";
 

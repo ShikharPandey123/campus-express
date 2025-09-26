@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Package, Archive, Users,Warehouse } from "lucide-react";
+import { Home, Package, Archive, Users,Warehouse,Map } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ const menuItems = [
   { title: "Inventory", url: "/inventory", icon: Archive, roles: ["Admin", "Manager", "WarehouseStaff"] },
   { title: "Warehouses", url: "/warehouses", icon: Warehouse, roles: ["Admin", "Manager", "WarehouseStaff"] },
   { title: "Users", url: "/users", icon: Users, roles: ["Admin", "Manager"] },
+  { title: "Tracking", url: "/shipments/tracking", icon: Map, roles: ["Admin", "Manager", "WarehouseStaff"] },
 ];
 
 export function AppSidebar() {
@@ -65,7 +66,7 @@ export function AppSidebar() {
         <SidebarGroup className="px-2 py-4">
           <SidebarMenu className="space-y-2">
             {menuItems
-              .filter((item) => role && item.roles.includes(role))
+              .filter((item) => !item.roles || (role && item.roles.includes(role)))
               .map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>

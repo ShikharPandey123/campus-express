@@ -1,0 +1,13 @@
+{
+  "name": "campus-express",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "dependencies": {
+    "@types/mongoose": "^5.11.96",
+    "mongoose": "^8.18.2"
+  }
+}

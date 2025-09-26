@@ -1,6 +1,5 @@
 import { Router } from "express";
 import Shipment from "@shared/models/Shipment";
-import mongoose from "mongoose";
 
 const router = Router();
 
